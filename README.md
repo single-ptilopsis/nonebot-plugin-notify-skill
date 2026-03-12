@@ -112,18 +112,16 @@ uv run python skill/wave-notifier/scripts/send_webhook.py --help
 复制并粘贴下面这段提示词给你的 LLM Agent（OpenCode、Claude Code 等）：
 
 ```text
-Install and configure the wave-notifier skill in this repository by following the instructions here:
-https://raw.githubusercontent.com/ptilopsis/nonebot-plugin-notify-skill/refs/heads/main/skill/wave-notifier/references/agent-install.md
+Install and configure the wave-notifier skill in by following the instructions here:
+https://raw.githubusercontent.com/single-ptilopsis/nonebot-plugin-notify-skill/refs/heads/main/skill/wave-notifier/references/agent-install.md
 ```
-
-或者你也可以直接阅读 [agent-install.md](skill/wave-notifier/references/agent-install.md) 手动操作，但更推荐让 Agent 执行，因为它更适合处理安装路径确认、覆盖确认和安装后的校验。
 
 ### 给 LLM Agent 看的
 
 读取安装指南并照做：
 
 ```bash
-curl -s https://raw.githubusercontent.com/ptilopsis/nonebot-plugin-notify-skill/refs/heads/main/skill/wave-notifier/references/agent-install.md
+curl -s https://raw.githubusercontent.com/single-ptilopsis/nonebot-plugin-notify-skill/refs/heads/main/skill/wave-notifier/references/agent-install.md
 ```
 
 ### 手动安装
