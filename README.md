@@ -103,6 +103,94 @@ uv run python skill/wave-notifier/scripts/send_webhook.py --help
 
 该脚本会向 Webhook 地址发送包含 `task_name`、`status`、`summary`、`finished_at` 的 JSON 请求体，并使用 Bearer Token 完成认证。
 
+## 安装 wave-notifier skill
+
+`skill/wave-notifier/` 可以安装到 OpenCode 或 Claude 的 skill 目录中，并可同时安装配套命令 `/notify-done` 和 `/notify-wave`。
+
+### 给人类看的
+
+复制并粘贴下面这段提示词给你的 LLM Agent（OpenCode、Claude Code 等）：
+
+```text
+Install and configure the wave-notifier skill in this repository by following the instructions here:
+https://raw.githubusercontent.com/ptilopsis/nonebot-plugin-notify-skill/refs/heads/main/skill/wave-notifier/references/agent-install.md
+```
+
+或者你也可以直接阅读 [agent-install.md](skill/wave-notifier/references/agent-install.md) 手动操作，但更推荐让 Agent 执行，因为它更适合处理安装路径确认、覆盖确认和安装后的校验。
+
+### 给 LLM Agent 看的
+
+读取安装指南并照做：
+
+```bash
+curl -s https://raw.githubusercontent.com/ptilopsis/nonebot-plugin-notify-skill/refs/heads/main/skill/wave-notifier/references/agent-install.md
+```
+
+### 手动安装
+
+#### 自动脚本安装
+
+仓库已提供安装脚本：
+
+```bash
+cd skill/wave-notifier
+./install.sh --help
+```
+
+常见用法：
+
+```bash
+./install.sh --project
+./install.sh --user
+./install.sh --opencode --project
+./install.sh --opencode --user
+./install.sh --claude --project
+./install.sh --claude --user
+```
+
+脚本会完成以下操作：
+
+- 安装 `skills/wave-notifier/`
+- 安装 `commands/notify-done.md`
+- 安装 `commands/notify-wave.md`
+- 在可能时自动识别当前是 OpenCode 还是 Claude
+
+#### 手动复制安装
+
+如果你不想运行脚本，也可以手动复制文件。
+
+##### 安装到 Claude
+
+- 当前项目范围：`./.claude/`
+- 全局范围：`~/.claude/`
+
+```bash
+mkdir -p ./.claude/skills ./.claude/commands
+rm -rf ./.claude/skills/wave-notifier
+cp -R ./skill/wave-notifier ./.claude/skills/wave-notifier
+cp ./skill/wave-notifier/commands/notify-done.md ./.claude/commands/
+cp ./skill/wave-notifier/commands/notify-wave.md ./.claude/commands/
+```
+
+##### 安装到 OpenCode
+
+- 当前项目范围：`./.opencode/`
+- 全局范围：`~/.config/opencode/`
+
+```bash
+mkdir -p ./.opencode/skills ./.opencode/commands
+rm -rf ./.opencode/skills/wave-notifier
+cp -R ./skill/wave-notifier ./.opencode/skills/wave-notifier
+cp ./skill/wave-notifier/commands/notify-done.md ./.opencode/commands/
+cp ./skill/wave-notifier/commands/notify-wave.md ./.opencode/commands/
+```
+
+> 如果你要安装到全局目录，请把上面的 `./.claude` 替换成 `~/.claude`，或把 `./.opencode` 替换成 `~/.config/opencode`。
+>
+> 上面的 `rm -rf` 会覆盖已有安装。执行前请先确认目标目录中的旧版本是否可以被替换。
+
+安装完成后，如当前 agent 会话没有自动刷新，请重启或重新加载会话。
+
 ## 技能目录说明
 `skill/` 目录包含了针对特定场景的优化说明和资源。例如 `wave-notifier` 提供了在 `oh-my-opencode` 环境下的最佳实践，详见其子目录下的 `SKILL.md`。
 

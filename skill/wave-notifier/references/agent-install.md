@@ -1,89 +1,167 @@
 # agent installation guide for OpenCode and Claude
 
-Use the packaged installer from the unpacked skill directory. The installer can now detect whether the current target is OpenCode or Claude and choose the matching install path automatically.
+If you are an LLM agent, read this file and follow it.
 
-## Runtime detection rules for agents
+Your job is to install `wave-notifier` correctly, with the least necessary back-and-forth, and without overwriting an existing install unless the user explicitly approves it.
 
-Before installing, detect the active runtime in this order:
+The installation is complete only when both of these are present under the chosen target base directory:
 
-1. If `OPENCODE_CONFIG_DIR` is set, treat the target as OpenCode.
-2. If the target repository contains `.opencode/` or `opencode.json`, treat it as OpenCode.
-3. If the target repository contains `.claude/` or `CLAUDE.md`, treat it as Claude.
-4. For user-level installs, if `~/.config/opencode/` exists, prefer OpenCode.
-5. For user-level installs, if `~/.claude/` exists, use Claude.
-6. If the path for the detected runtime is not documented here, use web search to find the official or highest-confidence install path before proceeding.
+- `skills/wave-notifier/`
+- `commands/notify-done.md` and `commands/notify-wave.md`
 
-If detection is ambiguous, pass an explicit runtime flag to the installer.
+Prefer the packaged installer first. Fall back to manual copy only when the installer cannot be used.
 
-Prefer official references first:
+## Agent quick start
 
-- OpenCode skills: `https://opencode.ai/docs/skills/`
-- OpenCode commands: `https://opencode.ai/docs/commands/`
-- Claude skills and command compatibility: `https://docs.claude.com/en/docs/claude-code/skills`
+1. Ask the minimum required questions.
+2. Resolve the target base directory.
+3. Prefer `skill/wave-notifier/install.sh`.
+4. If that is not suitable, use the manual copy procedure in this document.
+5. Verify the installed files exist.
+6. Report the exact installed paths and remind the user to restart or reload the current session if needed.
 
-Good web search queries when local docs are incomplete:
+## What agents should ask before installing
 
-- `OpenCode skills path SKILL.md`
-- `OpenCode commands directory`
-- `Claude Code skills path`
-- `Claude Code .claude commands`
+Ask only the minimum questions required to avoid installing into the wrong place.
 
-## Project-local install
+### Required questions
 
-Run this from the unpacked skill directory while your shell is in the target repository root.
+1. Should this be installed for **OpenCode** or **Claude**?
+2. Should this be installed **globally** or for the **current project**?
+3. If the target already contains `wave-notifier` or the same command files, is the agent allowed to **overwrite** them?
+
+### Ask only when needed
+
+Ask these follow-up questions only if the current context is insufficient:
+
+- **Project directory**: ask only when the user chose a project-local install but the current project root cannot be determined reliably.
+- **Partial install preference**: ask only if the user explicitly says they may want to install only the skill or only the commands. Otherwise, install both by default.
+
+### Do not ask by default
+
+Do **not** block installation on runtime usage configuration such as:
+
+- `WEBHOOK_URL`
+- `BEARER_TOKEN`
+- webhook endpoint reachability
+
+Those belong to **using** the skill, not **installing** it.
+
+Unless the user explicitly approved overwrite, do not remove or replace existing files.
+
+## Target path mapping
+
+### Project-local install
+
+- OpenCode: `./.opencode/`
+- Claude: `./.claude/`
+
+### Global install
+
+- OpenCode: `~/.config/opencode/`
+- Claude: `~/.claude/`
+
+If `OPENCODE_CONFIG_DIR` is set for a global OpenCode install, use `$OPENCODE_CONFIG_DIR/` as the base directory.
+
+## Preferred method: packaged installer
+
+Run from the unpacked skill directory:
 
 ```bash
-./install.sh
+./install.sh --help
 ```
 
-This installs into one of these path sets:
-
-- OpenCode: `./.opencode/skills/wave-notifier/` and `./.opencode/commands/`
-- Claude: `./.claude/skills/wave-notifier/` and `./.claude/commands/`
-
-To force a specific runtime:
+Common commands:
 
 ```bash
-./install.sh --opencode
-./install.sh --claude
-```
-
-## User-level install
-
-Run this from the unpacked skill directory:
-
-```bash
+./install.sh --project
 ./install.sh --user
-```
-
-This installs into one of these path sets:
-
-- OpenCode: `~/.config/opencode/skills/wave-notifier/` and `~/.config/opencode/commands/`
-- Claude: `~/.claude/skills/wave-notifier/` and `~/.claude/commands/`
-
-If `OPENCODE_CONFIG_DIR` is set, treat `$OPENCODE_CONFIG_DIR/` as the OpenCode user-level base instead of `~/.config/opencode/`.
-
-To force a specific runtime:
-
-```bash
+./install.sh --opencode --project
 ./install.sh --opencode --user
+./install.sh --claude --project
 ./install.sh --claude --user
 ```
 
-## Required runtime environment
+Behavior:
 
-Before using `/notify-done`, `/notify-wave`, or the underlying skill, configure these environment variables in the current shell:
+- installs `skills/wave-notifier/`
+- installs `commands/notify-done.md`
+- installs `commands/notify-wave.md`
+- auto-detects OpenCode vs Claude when possible
 
-```bash
-export WEBHOOK_URL="https://localhost:55003/notify"
-export BEARER_TOKEN="your-token"
+Recommended choices:
+
+- project-local install: `./install.sh --project`
+- global install: `./install.sh --user`
+- explicit OpenCode target: add `--opencode`
+- explicit Claude target: add `--claude`
+
+## Runtime detection rules
+
+When the runtime was not explicitly chosen by the user, detect it in this order:
+
+1. If `OPENCODE_CONFIG_DIR` is set, treat the target as OpenCode.
+2. If the target repository contains `.opencode/` or `opencode.json`, treat it as OpenCode.
+3. If this is a global install and `~/.config/opencode/` exists, prefer OpenCode.
+4. If the target repository contains `.claude/` or `CLAUDE.md`, treat it as Claude.
+5. If this is a global install and `~/.claude/` exists, use Claude.
+
+If detection is still ambiguous, ask the user instead of guessing.
+
+## How to speak to the user
+
+Keep the install conversation short.
+
+Ask the minimum required questions in one message when possible. For example:
+
+```text
+Before I install it, please confirm three things:
+1. Install for OpenCode or Claude?
+2. Install globally or only for the current project?
+3. If wave-notifier or the same command files already exist at the target, may I overwrite them?
 ```
 
-The skill now requires these values to come from the environment. Do not pass them as inline script arguments.
+Only ask follow-up questions when the project root is unclear or when the user explicitly asks for a partial install.
+
+## Fallback method: manual copy
+
+### Claude
+
+Project-local base:
+
+```bash
+mkdir -p ./.claude/skills ./.claude/commands
+cp -R ./skill/wave-notifier ./.claude/skills/wave-notifier
+cp ./skill/wave-notifier/commands/notify-done.md ./.claude/commands/
+cp ./skill/wave-notifier/commands/notify-wave.md ./.claude/commands/
+```
+
+Global base: replace `./.claude` with `~/.claude`.
+
+### OpenCode
+
+Project-local base:
+
+```bash
+mkdir -p ./.opencode/skills ./.opencode/commands
+cp -R ./skill/wave-notifier ./.opencode/skills/wave-notifier
+cp ./skill/wave-notifier/commands/notify-done.md ./.opencode/commands/
+cp ./skill/wave-notifier/commands/notify-wave.md ./.opencode/commands/
+```
+
+Global base: replace `./.opencode` with `~/.config/opencode`, or with `$OPENCODE_CONFIG_DIR` when that variable is intentionally being used.
+
+If overwrite was explicitly approved, remove the old `skills/wave-notifier/` directory before copying the new one.
 
 ## Verification
 
-After installation, verify the expected files exist:
+After installation, verify these files exist under the chosen base directory:
+
+- `skills/wave-notifier/SKILL.md`
+- `commands/notify-done.md`
+- `commands/notify-wave.md`
+
+Example for a project-local OpenCode install:
 
 ```bash
 ls ./.opencode/skills/wave-notifier/SKILL.md
@@ -91,12 +169,39 @@ ls ./.opencode/commands/notify-done.md
 ls ./.opencode/commands/notify-wave.md
 ```
 
-For Claude installs, replace `./.opencode` with `./.claude`. For user-level installs, replace the project-local base with either `~/.config/opencode`, `$OPENCODE_CONFIG_DIR`, or `~/.claude`.
+Adjust the base path for Claude or global installs.
+
+## Suggested agent prompt pattern
+
+If a user asks an agent to install this skill, the agent can follow this instruction shape:
+
+```text
+Install and configure the wave-notifier skill from this repository by following:
+skill/wave-notifier/references/agent-install.md
+
+Before making changes, ask only the minimum required questions:
+- OpenCode or Claude
+- global or current project
+- whether overwrite is allowed if the target already exists
+
+If project-local installation is selected and the project root is unclear, ask for the target project directory.
+
+Prefer running skill/wave-notifier/install.sh first. If that is not suitable, fall back to manual copy.
+
+Install all of the following together:
+- skills/wave-notifier/
+- commands/notify-done.md
+- commands/notify-wave.md
+
+After installation, verify the files exist, then report the exact installed paths and remind me to restart or reload the current session if needed.
+
+Do not overwrite existing files unless I explicitly approve it.
+```
 
 ## Notes for agents
 
+- This document is the source of truth for the install flow.
 - Run the installer from the unpacked skill directory.
-- For project installs, set the current working directory to the target repository root before running `./install.sh`.
-- The installer copies the packaged commands into a command loader directory because neither OpenCode nor Claude loads slash commands from inside the skill directory itself.
-- If runtime detection fails, use web search against the official docs to confirm the current path and then re-run the installer with `--opencode` or `--claude`.
-- If `WEBHOOK_URL` or `BEARER_TOKEN` is missing, do not attempt notification until the environment is configured.
+- For project-local installs, make sure the working directory refers to the target repository root when that affects path resolution.
+- OpenCode and Claude load commands from command directories, not from inside the skill directory itself, so installing the skill alone is incomplete.
+- If the documented paths here ever become outdated, verify against official docs before inventing a new path.
