@@ -54,37 +54,36 @@ SKILL_NAME="wave-notifier"
 detect_runtime() {
   if [[ "$RUNTIME" != "auto" ]]; then
     DETECTION_REASON="runtime forced by command-line flag"
-    printf '%s\n' "$RUNTIME"
     return
   fi
 
   if [[ -n "${OPENCODE_CONFIG_DIR:-}" ]]; then
     DETECTION_REASON="OPENCODE_CONFIG_DIR is set"
-    printf '%s\n' "opencode"
+    RUNTIME="opencode"
     return
   fi
 
   if [[ -d "$(pwd)/.opencode" || -f "$(pwd)/opencode.json" ]]; then
     DETECTION_REASON="found OpenCode project markers (.opencode/ or opencode.json)"
-    printf '%s\n' "opencode"
+    RUNTIME="opencode"
     return
   fi
 
   if [[ "$MODE" == "user" && -d "$HOME/.config/opencode" ]]; then
     DETECTION_REASON="found user-level OpenCode config directory"
-    printf '%s\n' "opencode"
+    RUNTIME="opencode"
     return
   fi
 
   if [[ -d "$(pwd)/.claude" || -f "$(pwd)/CLAUDE.md" ]]; then
     DETECTION_REASON="found Claude project markers (.claude/ or CLAUDE.md)"
-    printf '%s\n' "claude"
+    RUNTIME="claude"
     return
   fi
 
   if [[ "$MODE" == "user" && -d "$HOME/.claude" ]]; then
     DETECTION_REASON="found user-level Claude config directory"
-    printf '%s\n' "claude"
+    RUNTIME="claude"
     return
   fi
 
@@ -93,7 +92,7 @@ detect_runtime() {
   exit 1
 }
 
-RUNTIME="$(detect_runtime)"
+detect_runtime
 
 if [[ "$RUNTIME" == "opencode" ]]; then
   if [[ "$MODE" == "project" ]]; then
