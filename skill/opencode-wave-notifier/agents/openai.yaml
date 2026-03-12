@@ -1,0 +1,5 @@
+interface:
+  display_name: "OpenCode Wave Notifier"
+  short_description: "Send explicit Prometheus TaskPlan completion webhooks"
+  icon: "bell"
+  color: "blue"
