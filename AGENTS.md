@@ -6,7 +6,7 @@ Prior to this file's creation, no `AGENTS.md`, `.cursor/rules/`, `.cursorrules`,
 ## Repository Overview
 This is a Python/NoneBot project with two related but separate parts:
 - the bot/plugin code under `bot.py` and `nonebot_plugin_notify_skill/plugins/`
-- the skill subtree under `skill/opencode-wave-notifier/`
+- the skill subtree under `skill/wave-notifier/`
 
 Treat `pyproject.toml` and the current source code as the source of truth if this guide and the code ever drift.
 
@@ -16,8 +16,8 @@ Treat `pyproject.toml` and the current source code as the source of truth if thi
 - `bot.py`: primary NoneBot entrypoint.
 - `main.py`: stub script; not the main runtime path.
 - `nonebot_plugin_notify_skill/plugins/notify_webhook.py`: main plugin implementation.
-- `skill/opencode-wave-notifier/SKILL.md`: skill documentation.
-- `skill/opencode-wave-notifier/scripts/send_webhook.py`: stdlib CLI helper for webhook delivery tests.
+- `skill/wave-notifier/SKILL.md`: skill documentation.
+- `skill/wave-notifier/scripts/send_webhook.py`: stdlib CLI helper for webhook delivery tests.
 - `README.md`: short project bootstrap guidance.
 
 ## Structure Warning
@@ -39,7 +39,7 @@ The project uses `uv` for environment and dependency management.
 - NoneBot run help: `uv run nb run --help`
 
 ### Helper script
-- Webhook sender help: `uv run python skill/opencode-wave-notifier/scripts/send_webhook.py --help`
+- Webhook sender help: `uv run python skill/wave-notifier/scripts/send_webhook.py --help`
 
 ## Build / Package Reality
 - There is **no dedicated build or packaging command** configured in this repository today.
@@ -73,7 +73,7 @@ There is **no automated test suite** configured in this repository right now.
 ### Verification strategy instead of tests
 - Use the Ruff and Pyright commands above.
 - Run the bot with `uv run nb run --reload` or `uv run python bot.py` when runtime verification is needed.
-- Use `skill/opencode-wave-notifier/scripts/send_webhook.py` for manual webhook testing.
+- Use `skill/wave-notifier/scripts/send_webhook.py` for manual webhook testing.
 
 ## Versioning & Tooling Baseline
 There is a version tension that agents should respect:

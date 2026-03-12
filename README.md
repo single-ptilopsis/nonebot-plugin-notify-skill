@@ -16,7 +16,7 @@
 ├── nonebot_plugin_notify_skill/
 │   └── notify_webhook.py      # 插件核心逻辑
 ├── skill/
-│   └── opencode-wave-notifier/
+│   └── wave-notifier/
 │       ├── scripts/
 │       │   └── send_webhook.py # Webhook 发送辅助脚本
 │       └── SKILL.md           # 技能详细说明
@@ -95,16 +95,16 @@ uv run nb run --reload
 - **类型检查**：`uv run pyright`
 
 ## 辅助脚本
-项目内置了发送 Webhook 的测试脚本，位于 `skill/opencode-wave-notifier/scripts/send_webhook.py`。
+项目内置了发送 Webhook 的测试脚本，位于 `skill/wave-notifier/scripts/send_webhook.py`。
 使用方法：
 ```bash
-uv run python skill/opencode-wave-notifier/scripts/send_webhook.py --help
+uv run python skill/wave-notifier/scripts/send_webhook.py --help
 ```
 
 该脚本会向 Webhook 地址发送包含 `task_name`、`status`、`summary`、`finished_at` 的 JSON 请求体，并使用 Bearer Token 完成认证。
 
 ## 技能目录说明
-`skill/` 目录包含了针对特定场景的优化说明和资源。例如 `opencode-wave-notifier` 提供了在 `oh-my-opencode` 环境下的最佳实践，详见其子目录下的 `SKILL.md`。
+`skill/` 目录包含了针对特定场景的优化说明和资源。例如 `wave-notifier` 提供了在 `oh-my-opencode` 环境下的最佳实践，详见其子目录下的 `SKILL.md`。
 
 ## 开发注意事项
 - 核心插件代码位于 `nonebot_plugin_notify_skill/notify_webhook.py`，不要随意在插件目录添加 `__init__.py`。

@@ -6,7 +6,7 @@ Request webhook notifications for each completed Prometheus TaskPlan wave, plus 
 
 1. Confirm that the user explicitly requested notification for each TaskPlan wave.
 2. Confirm that `WEBHOOK_URL` and `BEARER_TOKEN` are already configured in the current shell environment.
-3. For each completed wave, use the `opencode-wave-notifier` skill to send exactly one notification.
+3. For each completed wave, use the `wave-notifier` skill to send exactly one notification.
 4. After the entire TaskPlan is complete, also send one final completion notification.
 5. Build the payload with these fields only:
    - `task_name`

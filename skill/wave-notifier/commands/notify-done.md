@@ -7,7 +7,7 @@ Request a final webhook notification when all explicitly requested work is compl
 1. Confirm that the user explicitly requested notification for this task.
 2. Confirm that `WEBHOOK_URL` and `BEARER_TOKEN` are already configured in the current shell environment.
 3. Confirm that all requested work is complete, including any promised checks for this run.
-4. Use the `opencode-wave-notifier` skill to send exactly one final completion notification.
+4. Use the `wave-notifier` skill to send exactly one final completion notification.
 5. Build the payload with these fields only:
    - `task_name`
    - `status`

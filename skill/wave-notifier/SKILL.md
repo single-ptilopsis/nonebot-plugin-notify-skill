@@ -1,5 +1,5 @@
 ---
-name: opencode-wave-notifier
+name: wave-notifier
 description: send explicit webhook notifications for oh-my-opencode workflows that use sisyphus orchestration and prometheus planning. use when the user clearly asks to be notified after all requested changes are finished, or after each taskplan or wave completes, such as "完成所有改动后，通知我" or "在taskplan各wave完成后，分别通知我，并给出简短summary". this skill is opt-in only, for agent-initiated notifications, reads webhook_url and bearer_token from environment variables, and should not be used unless the user explicitly requested notification.
 ---
 
@@ -136,7 +136,7 @@ This package includes companion command files for oh-my-opencode:
 - `commands/notify-done.md`
 - `commands/notify-wave.md`
 
-These files are packaged for convenience, but oh-my-opencode loads slash commands from command directories such as `~/.claude/commands/` or `./.claude/commands/`, not from inside the skill directory. See `references/command-install.md` for installation details.
+These files are packaged for convenience, but the active runtime loads slash commands from command directories such as `~/.config/opencode/commands/`, `./.opencode/commands/`, `~/.claude/commands/`, or `./.claude/commands/`, not from inside the skill directory. See `references/command-install.md` for installation details.
 
 ## Reference
 
